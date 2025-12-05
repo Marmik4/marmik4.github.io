@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marmik Parikh | Software Engineer & Security Specialist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            /* Light Theme (Default) */
+            --bg-color: #f8fafc;
+            --text-main: #0f172a;
+            --text-secondary: #475569;
+            --primary-color: #2563eb;
+            --accent-teal: #0d9488;
+            --card-bg: #ffffff;
+            --nav-bg: rgba(255, 255, 255, 0.85);
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --nav-height: 70px;
+            --terminal-bg: #1e1e1e;
+            --terminal-header: #2d2d2d;
+            --terminal-text: #cccccc;
+            --terminal-green: #4af626;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme Variables */
+            --bg-color: #0f172a;
+            --text-main: #f8fafc;
+            --text-secondary: #94a3b8;
+            --primary-color: #60a5fa;
+            --accent-teal: #2dd4bf;
+            --card-bg: #1e293b;
+            --nav-bg: rgba(15, 23, 42, 0.85);
+            --border-color: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --terminal-bg: #000000;
+            --terminal-header: #1a1a1a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; /* Hide default cursor */ }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            background: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(13, 148, 136, 0.1) 0px, transparent 50%);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary-color);
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--primary-color);
+            opacity: 0.5;
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        /* Cursor Hover State */
+        body.hovering .cursor-outline {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(37, 99, 235, 0.1);
+            border-color: transparent;
+        }
+
+        /* --- UTILITIES --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; } /* Wider container for better nav */
+        a { text-decoration: none; color: inherit; }
+        section { padding: 100px 0; }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- NAVIGATION --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: var(--nav-height);
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        /* Left: Logo */
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Center: Links */
+        .nav-center {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+            transition: color 0.3s;
+        }
+        
+        .nav-link svg { width: 16px; height: 16px; opacity: 0.7; }
+        .nav-link:hover { color: var(--primary-color); }
+        .nav-link:hover svg { opacity: 1; }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        /* Right: Actions (Socials + Theme + Resume) */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 2;
+        }
+
+        .social-icon {
+            color: var(--text-secondary);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .social-icon:hover { color: var(--primary-color); transform: translateY(-2px); }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: none; /* Custom cursor */
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            transition: 0.3s;
+        }
+        .theme-toggle:hover { color: var(--primary-color); transform: rotate(15deg); }
+
+        .btn-resume {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            margin-left: 10px;
+        }
+        
+        .btn-resume::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+        .btn-resume:hover { color: white; border-color: transparent; }
+        .btn-resume:hover::before { width: 100%; }
+
+        .hamburger { display: none; }
+
+        /* --- HERO --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(180deg, rgba(37,99,235,0.2) 0%, rgba(13,148,136,0.2) 100%);
+            filter: blur(80px);
+            border-radius: 50%;
+            top: 20%;
+            right: -10%;
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .hero-label {
+            font-family: var(--font-mono);
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.1);
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 72px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .hero h2 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 540px;
+            margin-bottom: 2.5rem;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--text-main);
+            color: var(--bg-color); /* Inverted for contrast */
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.2);
+        }
+
+        /* --- CARDS --- */
+        .spotlight-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.1s, box-shadow 0.2s, background 0.3s;
+            z-index: 1;
+        }
+
+        .spotlight-card::before {
+            content: "";
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            top: 0; left: 0;
+            background: radial-gradient(
+                800px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(37, 99, 235, 0.06),
+                transparent 40%
+            );
+            z-index: 3;
+            pointer-events: none; 
+        }
+        
+        /* --- ABOUT --- */
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+        }
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+            margin-left: 20px;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+        }
+
+        .skills-container {
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
+        
+        .skill-tag {
+            padding: 8px 16px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: 0.3s;
+        }
+        
+        .skill-tag:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* --- EXPERIENCE --- */
+        .job-card {
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .job-title { font-size: 1.25rem; font-weight: 700; }
+        .company { color: var(--primary-color); }
+        .job-date { 
+            font-family: var(--font-mono); 
+            font-size: 0.85rem; 
+            background: var(--bg-color); 
+            padding: 4px 10px; 
+            border-radius: 4px; 
+            height: fit-content;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .job-list li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 0.8rem;
+            color: var(--text-secondary);
+            list-style: none;
+        }
+        .job-list li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* --- PROJECTS --- */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .project-card {
+            padding: 2rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            box-shadow: var(--shadow);
+        }
+
+        .folder-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: 0.3s;
+        }
+        
+        .project-card:hover .folder-icon {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.1) translateZ(20px);
+        }
+
+        .project-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            transform: translateZ(10px);
+        }
+
+        .project-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+            transform: translateZ(10px);
+        }
+
+        .tech-stack {
+            display: flex;
+            gap: 10px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            transform: translateZ(10px);
+        }
+
+        /* --- TERMINAL GAME STYLES --- */
+        .terminal-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            font-family: var(--font-mono);
+        }
+
+        .terminal-header {
+            background: var(--terminal-header);
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-btn { width: 12px; height: 12px; border-radius: 50%; }
+        .btn-red { background: #ff5f56; }
+        .btn-yellow { background: #ffbd2e; }
+        .btn-green { background: #27c93f; }
+        .terminal-title { color: #888; margin-left: 10px; font-size: 0.8rem; }
+
+        .terminal-body {
+            background: var(--terminal-bg);
+            padding: 20px;
+            min-height: 350px;
+            color: var(--terminal-text);
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .terminal-output { flex-grow: 1; margin-bottom: 10px; white-space: pre-wrap; line-height: 1.5; }
+        .terminal-line { margin-bottom: 5px; }
+        .text-green { color: var(--terminal-green); }
+        .text-blue { color: #4da6ff; }
+        .text-red { color: #ff5555; }
+        
+        .terminal-input-line { display: flex; align-items: center; color: var(--terminal-text); }
+        .prompt { margin-right: 8px; color: var(--terminal-green); }
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: var(--terminal-text);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            flex-grow: 1;
+            outline: none;
+        }
+
+        /* Matrix Rain Canvas (Hidden by default) */
+        #matrix-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 9998;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 2s;
+        }
+        #matrix-canvas.active { opacity: 0.3; }
+
+        /* --- CONTACT --- */
+        .contact-box {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 4rem 2rem;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .contact-box::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 6px;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-teal));
+        }
+
+        /* --- MOBILE --- */
+        @media (max-width: 900px) {
+            .nav-center {
+                display: none; /* Hide standard nav */
+                flex-direction: column;
+                position: fixed;
+                top: var(--nav-height);
+                left: 0;
+                width: 100%;
+                background: var(--card-bg);
+                padding: 2rem;
+                gap: 20px;
+                border-bottom: 1px solid var(--border-color);
+                box-shadow: var(--shadow);
+                transform: translateY(-100%);
+                transition: transform 0.3s ease-in-out;
+                z-index: 1;
+                opacity: 0;
+            }
+
+            .nav-center.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+            
+            .nav-right .social-icon, .nav-right .theme-toggle {
+                display: none; /* Simplify top bar on mobile */
+            }
+
+            .hamburger {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                cursor: pointer;
+            }
+            .bar { width: 25px; height: 3px; background: var(--text-main); transition: 0.3s; }
+            
+            .hamburger.active .bar:nth-child(2) { opacity: 0; }
+            .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+            .about-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 40px; }
+            
+            /* Disable fancy cursor on mobile */
+            * { cursor: auto; }
+            .cursor-dot, .cursor-outline { display: none; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- MATRIX RAIN CANVAS -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <header>
+        <div class="container">
+            <nav>
+                <!-- 1. LOGO -->
+                <div class="logo hover-target" onclick="window.scrollTo(0,0)">Marmik.dev</div>
+                
+                <!-- 2. CENTER LINKS -->
+                <ul class="nav-center">
+                    <li>
+                        <a href="#about" class="nav-link hover-target">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                            About
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#experience" class="nav-link hover-target">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                            Experience
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#projects" class="nav-link hover-target">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                            Work
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#playground" class="nav-link hover-target">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                            Playground
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#contact" class="nav-link hover-target">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                            Contact
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- 3. RIGHT ACTIONS -->
+                <div class="nav-right">
+                    <!-- GitHub -->
+                    <a href="https://github.com/Marmik4" target="_blank" class="social-icon hover-target" aria-label="GitHub">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                    </a>
+                    <!-- LinkedIn -->
+                    <a href="https://linkedin.com/in/MarmikParikh" target="_blank" class="social-icon hover-target" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    </a>
+
+                    <!-- Theme Toggle -->
+                    <button class="theme-toggle hover-target" id="theme-toggle" aria-label="Toggle Theme">
+                        <!-- Sun Icon (Default) -->
+                        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    </button>
+
+                    <a href="mailto:marmikparikh@gmail.com" class="btn-resume hover-target">Resume</a>
+
+                    <div class="hamburger hover-target">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- HERO -->
+        <section class="hero reveal">
+            <div class="hero-content">
+                <span class="hero-label">Software Engineer & Security Specialist</span>
+                <h1>Building Secure<br>Infrastructure through Code.</h1>
+                <h2>I bridge the gap between Full Stack<br>Development and Cybersecurity.</h2>
+                <p>
+                    Specializing in building scalable, secure web applications (C#/.NET, React) and AI-driven threat detection systems. Currently pursuing a Master's in IT Security.
+                </p>
+                <a href="#projects" class="btn-primary hover-target">View My Work</a>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="reveal">
+            <h2 class="section-title">01. About Me</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>
+                        Hello! My name is Marmik. I started my journey in generic web development, but my curiosity led me down the rabbit hole of <strong>Cybersecurity</strong>. I realized that building an app is easy, but building a <em>secure</em> app is an art.
+                    </p>
+                    <p>
+                        I spent nearly 3 years at <strong>Meditab Software</strong> resolving critical production issues and optimizing backend security for healthcare systems. Now, I am sharpening my skills with a Master's in IT Security.
+                    </p>
+                </div>
+                
+                <!-- Spotlight Card for Skills -->
+                <div class="skills-container spotlight-card hover-target">
+                    <h3>Technologies I use:</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag hover-target">C# / .NET Core</span>
+                        <span class="skill-tag hover-target">Python (ML)</span>
+                        <span class="skill-tag hover-target">Node.js</span>
+                        <span class="skill-tag hover-target">React</span>
+                        <span class="skill-tag hover-target">SQL Server</span>
+                        <span class="skill-tag hover-target">Azure & Docker</span>
+                        <span class="skill-tag hover-target">Fortinet</span>
+                        <span class="skill-tag hover-target">Git</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPERIENCE -->
+        <section id="experience" class="reveal">
+            <h2 class="section-title">02. Where I've Worked</h2>
+            
+            <div class="job-card spotlight-card">
+                <div class="job-header">
+                    <span class="job-title">Programmer Analyst <span class="company">@ Meditab Software</span></span>
+                    <span class="job-date">Dec 2021 - May 2024</span>
+                </div>
+                <ul class="job-list">
+                    <li>Engineered secure authentication and role-based access controls for enterprise healthcare clients.</li>
+                    <li>Designed and integrated REST APIs, implementing encryption protocols for data-in-transit.</li>
+                    <li>Resolved over <strong>20+ critical production issues</strong> in the .NET ecosystem, reducing defect resolution time by 30%.</li>
+                    <li>Optimized SQL Server stored procedures, improving data retrieval speeds for large-scale reporting modules.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section id="projects" class="reveal">
+            <h2 class="section-title">03. Some Things I've Built</h2>
+            <div class="projects-grid">
+
+                <!-- Project 1 -->
+                <a href="https://github.com/Marmik4/SnapSplit" target="_blank" class="project-card spotlight-card hover-target tilt-card">
+                    <div class="folder-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    </div>
+                    <h3 class="project-title">SnapSplit</h3>
+                    <p class="project-desc">Collaborative bill-splitting app. Features real-time sync via Firebase and auto-receipt scanning.</p>
+                    <div class="tech-stack">
+                        <span>Node.js</span>
+                        <span>React</span>
+                        <span>Firebase</span>
+                    </div>
+                </a>
+
+                <!-- Project 2 -->
+                <a href="https://github.com/Marmik4/Al-HairStyle-Generator" target="_blank" class="project-card spotlight-card hover-target tilt-card">
+                    <div class="folder-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    </div>
+                    <h3 class="project-title">AI Hairstyle Generator</h3>
+                    <p class="project-desc">Computer vision project using Diffusers and PyTorch to generate hairstyles on user-uploaded images.</p>
+                    <div class="tech-stack">
+                        <span>Python</span>
+                        <span>PyTorch</span>
+                        <span>CV</span>
+                    </div>
+                </a>
+
+                <!-- Project 3 -->
+                <a href="https://github.com/Marmik4/Phishing-Detection" target="_blank" class="project-card spotlight-card hover-target tilt-card">
+                    <div class="folder-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    </div>
+                    <h3 class="project-title">Phishing Detection</h3>
+                    <p class="project-desc">ML model utilizing NLP to detect malicious emails. Trained on large datasets of common signatures.</p>
+                    <div class="tech-stack">
+                        <span>Python</span>
+                        <span>Scikit-Learn</span>
+                        <span>Security</span>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- SECURITY PLAYGROUND -->
+        <section id="playground" class="reveal">
+            <h2 class="section-title">04. Security Playground</h2>
+            <div class="terminal-container hover-target">
+                <div class="terminal-header">
+                    <div class="terminal-btn btn-red"></div>
+                    <div class="terminal-btn btn-yellow"></div>
+                    <div class="terminal-btn btn-green"></div>
+                    <span class="terminal-title">marmik@server: ~/ctf-challenge</span>
+                </div>
+                <div class="terminal-body" id="terminal-body">
+                    <div class="terminal-output" id="terminal-output">
+                        <div class="terminal-line">Welcome to <span class="text-green">Marmik Security Shell (MSS) v1.0</span></div>
+                        <div class="terminal-line">Initialize authentication protocol to access the system.</div>
+                        <div class="terminal-line">Type <span class="text-blue">'help'</span> to see available commands.</div>
+                        <br>
+                    </div>
+                    <div class="terminal-input-line">
+                        <span class="prompt">marmik@root:~$</span>
+                        <input type="text" class="terminal-input" id="terminal-input" autocomplete="off" spellcheck="false" autofocus>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="reveal">
+            <div class="contact-box spotlight-card hover-target">
+                <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--text-main);">Get In Touch</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                    I am actively seeking opportunities in Software Engineering (Full Stack) or Cybersecurity.
+                </p>
+                <a href="mailto:marmikparikh@gmail.com" class="btn-primary hover-target">Say Hello</a>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // --- AUDIO ENGINE (NEW) ---
+        // We use Web Audio API to generate sounds without external files.
+        // This avoids 404 errors and CORS issues.
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // 1. TYPING SOUND (Mechanical Click)
+        const playTypingSound = () => {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            const filter = audioCtx.createBiquadFilter();
+
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.05);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+
+            gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.05);
+        };
+
+        // 2. SUCCESS SOUND (Retro Jingle)
+        const playSuccessSound = () => {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const now = audioCtx.currentTime;
+            
+            // Note 1
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(440, now);
+            gain1.gain.setValueAtTime(0.1, now);
+            gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            osc1.connect(gain1);
+            gain1.connect(audioCtx.destination);
+            osc1.start();
+            osc1.stop(now + 0.2);
+
+            // Note 2 (Higher)
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(880, now + 0.2);
+            gain2.gain.setValueAtTime(0.1, now + 0.2);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+            osc2.connect(gain2);
+            gain2.connect(audioCtx.destination);
+            osc2.start(now + 0.2);
+            osc2.stop(now + 0.6);
+        };
+
+        // 3. ERROR SOUND (Low Buzz)
+        const playErrorSound = () => {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        };
+
+        // --- EXISTING JS ---
+
+        // 1. CUSTOM CURSOR
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        document.querySelectorAll('.hover-target').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        // 2. THEME TOGGLE
+        const themeBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        
+        if (localStorage.getItem('theme') === 'dark') {
+            htmlElement.setAttribute('data-theme', 'dark');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // 3. SPOTLIGHT & TILT
+        document.querySelectorAll('.spotlight-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+
+                if (card.classList.contains('tilt-card')) {
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -5;
+                    const rotateY = ((x - centerX) / centerX) * 5;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                }
+            });
+
+            card.addEventListener('mouseleave', () => {
+                if (card.classList.contains('tilt-card')) {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+                }
+            });
+        });
+
+        // 4. SCROLL REVEAL
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        });
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+        
+        // 5. MOBILE MENU
+        const hamburger = document.querySelector(".hamburger");
+        const navCenter = document.querySelector(".nav-center");
+        
+        hamburger.addEventListener("click", () => {
+            hamburger.classList.toggle("active");
+            navCenter.classList.toggle("active");
+        });
+        
+        document.querySelectorAll(".nav-link").forEach(n => n.addEventListener("click", () => {
+            hamburger.classList.remove("active");
+            navCenter.classList.remove("active");
+        }));
+
+        // 6. TERMINAL GAME LOGIC (UPDATED WITH SOUND)
+        const termInput = document.getElementById('terminal-input');
+        const termOutput = document.getElementById('terminal-output');
+        const termBody = document.getElementById('terminal-body');
+
+        let gameState = 'IDLE'; // IDLE, LEVEL1, LEVEL2, LEVEL3, WON
+
+        const printLine = (text, className = '') => {
+            const div = document.createElement('div');
+            div.className = `terminal-line ${className}`;
+            div.innerHTML = text; // Allow HTML
+            termOutput.appendChild(div);
+            // Scroll to bottom
+            termBody.scrollTop = termBody.scrollHeight;
+        };
+
+        const handleCommand = (cmd) => {
+            const cleanCmd = cmd.trim().toLowerCase();
+            printLine(`<span class="prompt">marmik@root:~$</span> ${cmd}`);
+
+            if (cleanCmd === 'clear') {
+                termOutput.innerHTML = '';
+                return;
+            }
+
+            if (cleanCmd === 'help') {
+                printLine("Available commands:");
+                printLine("- <span class='text-blue'>start</span>: Begin the CTF Challenge");
+                printLine("- <span class='text-blue'>clear</span>: Clear terminal");
+                printLine("- <span class='text-blue'>whoami</span>: Display user info");
+                return;
+            }
+
+            if (cleanCmd === 'whoami') {
+                printLine("Guest User (Unauthorized)");
+                return;
+            }
+
+            // GAME LOGIC
+            if (gameState === 'IDLE') {
+                if (cleanCmd === 'start') {
+                    gameState = 'LEVEL1';
+                    printLine("<br>--- INITIATING SEQUENCE ---");
+                    printLine("Level 1: Basic Encryption");
+                    printLine("Decode this Base64 string: <span class='text-blue'>SGVsbG8gV29ybGQ=</span>");
+                    printLine("Enter the decoded text below:");
+                } else {
+                    printLine("Command not recognized. Type 'help'.", "text-red");
+                    playErrorSound();
+                }
+            } else if (gameState === 'LEVEL1') {
+                if (cleanCmd === 'hello world') {
+                    gameState = 'LEVEL2';
+                    printLine("✅ Correct!", "text-green");
+                    playSuccessSound();
+                    printLine("<br>Level 2: Web Security");
+                    printLine("An attacker inputs: <span class='text-blue'>' OR 1=1 --</span>");
+                    printLine("What type of vulnerability is this? (e.g., 'xss', 'sql injection', 'csrf')");
+                } else {
+                    printLine("❌ Incorrect. Try again.", "text-red");
+                    playErrorSound();
+                }
+            } else if (gameState === 'LEVEL2') {
+                if (cleanCmd === 'sql injection' || cleanCmd === 'sqli') {
+                    gameState = 'LEVEL3';
+                    printLine("✅ Correct!", "text-green");
+                    playSuccessSound();
+                    printLine("<br>Level 3: Networking");
+                    printLine("What is the standard port number for HTTPS traffic?");
+                } else {
+                    printLine("❌ Incorrect. Try again.", "text-red");
+                    playErrorSound();
+                }
+            } else if (gameState === 'LEVEL3') {
+                if (cleanCmd === '443') {
+                    gameState = 'WON';
+                    printLine("✅ Correct!", "text-green");
+                    playSuccessSound();
+                    printLine("<br>🎉 ACCESS GRANTED 🎉");
+                    printLine("System Unlocked. Initiating visual reward...", "text-green");
+                    startMatrixRain();
+                } else {
+                    printLine("❌ Incorrect. Try again.", "text-red");
+                    playErrorSound();
+                }
+            } else if (gameState === 'WON') {
+                printLine("You have already won! Enjoy the view.");
+            }
+        };
+
+        termInput.addEventListener('keydown', (e) => {
+            // Play sound on every keypress
+            playTypingSound();
+
+            if (e.key === 'Enter') {
+                handleCommand(termInput.value);
+                termInput.value = '';
+            }
+        });
+
+        // MATRIX RAIN EFFECT
+        const startMatrixRain = () => {
+            const canvas = document.getElementById('matrix-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.classList.add('active');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const nums = '0123456789';
+            const alphabet = latin + nums;
+
+            const fontSize = 16;
+            const columns = canvas.width / fontSize;
+            const drops = [];
+
+            for(let x = 0; x < columns; x++) {
+                drops[x] = 1;
+            }
+
+            const draw = () => {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#0F0';
+                ctx.font = fontSize + 'px monospace';
+
+                for(let i = 0; i < drops.length; i++) {
+                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            };
+            setInterval(draw, 30);
+        };
+
+    </script>
+</body>
+</html>
